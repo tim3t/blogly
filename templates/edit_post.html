@@ -1,0 +1,36 @@
+{% extends "base.html"%}
+{% block content %}
+
+<body>
+<h1>Edit post</h1>
+<form method="POST">
+    <div id="form">
+    
+        <label for="title">Title</label><br>
+            <input type="text" 
+            name="title" 
+            id="title"
+            size="50"
+            value="{{ post.title }}"><br>
+        <label for="content">Content</label><br>
+            <textarea 
+            name="content" 
+            id="content"
+            rows="4"
+            cols="50"
+            value="{{ post.content }}"></textarea><br>
+           
+    </div>
+
+    <div id="profile_actions">
+    <a href="/posts/{{post.id}}" class="btn btn-danger">Cancel</a>
+    <button type="submit" class="btn btn-info">Save</button>
+
+
+</form>
+</div>
+
+</body>
+</html>
+
+{% endblock %}

@@ -1,24 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/app.css">  
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{user.first_name}} {{user.last_name}}</title>
-</head>
+{% extends "base.html"%}
+{% block content%}
 <body>
    
-   
-    <div id="profile_card">
+   <div class="container">
+
+    <div class="row">
+        <div class="col-sm" id="profile_actions">
     <img src="{{user.image_url}}" alt="Profile picture" width="150">
     <h1>{{user.first_name}} {{user.last_name}}</h1>
-    </div>
-   
+       
+
     <form>
-    <div id="profile_actions">
         <button class="btn btn-info" 
         formaction="/users/{{ user.id }}/edit" 
         formmethod="GET">Edit
@@ -27,7 +19,26 @@
         formaction="/users/{{ user.id }}/delete"
         formmethod="POST">Delete
     </button>
+    </form>
+    </div>
+    
+    <div class="col-sm" id="user_posts">
+        <h2>Posts</h2>
+        <ul>
+        {% for post in posts%}
+        <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+        {% endfor %}    
+        </ul>
+    <form>
+        <button class="btn btn-info"
+        formaction="/users/{{ user.id }}/posts/new"
+        formmethod="GET">Add Post
+    </button>
+    </form>
+    </div>
 </div>
+
 <a href="/">Go back to Users</a>
 </body>
 </html>
+{% endblock %}
