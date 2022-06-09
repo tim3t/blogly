@@ -121,7 +121,8 @@ def handle_add_post_form(user_id):
 
     new_post = Post(
     title = request.form["post_title"],
-    content = request.form["post_content"])
+    content = request.form["post_content"],
+    user = user_id)
 
     db.session.add(new_post)
     db.session.commit()
