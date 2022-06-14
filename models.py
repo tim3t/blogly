@@ -32,3 +32,23 @@ class Post(db.Model):
     user = db.Column(db.Integer, db.ForeignKey ('users.id'))
 
     by_user = db.relationship('User', backref='posts')
+
+
+class Tag(db.Model):
+    """Tag model, can add to posts"""
+
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, nullable=False, unique=True)
+
+    posts = db.relationship('Post', secondary="posts_tags", backref="tags")
+
+class PostTag(db.Model):
+    """Join table for Posts and Tags"""
+
+    __tablename__ = 'posts_tags'
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+

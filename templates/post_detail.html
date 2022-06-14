@@ -1,6 +1,7 @@
 {% extends "base.html"%}
 {% block content%}
 
+<div class="container-fluid">
 <body>
     <h1>{{post.title}}</h1>
     <p>{{post.content}}</p>
@@ -12,21 +13,21 @@
     <form>
         <a href="/users/{{post.by_user.id}}"
         type="button"
-        class="btn-secondary">Cancel
+        class="btn btn-secondary">Cancel
             </a>
         <button 
-        class="btn-info"
+        class="btn btn-info"
         formaction="/posts/{{post.id}}/edit"
         formmethod="GET">Edit
             </button>
         <button 
         type="submit"
-        class="btn-danger"
+        class="btn btn-danger"
         formaction="/posts/{{post.id}}/delete"
         formmethod="POST">Delete
             </button> 
     </form>
-
+</div>
 </body>
 </html>
 {% endblock%}

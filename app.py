@@ -3,7 +3,7 @@ from pickle import FALSE
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy import false, true
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 app = Flask(__name__)
 
@@ -159,3 +159,70 @@ def delete_post(post_id):
 
     return redirect("/users")
 
+"""----------Routes for tagging-----------"""
+
+@app.route('/tags')
+def tags_list():
+    """Show all tags info"""
+
+    tags = Tag.query.all()
+    return render_template('tag_index.html', tags=tags)
+
+@app.route('/tags/new')
+def tags_new_form():
+    """Form to create a new tag"""
+
+    posts = Post.query.all()
+    return render_template('tag_new.html', posts=posts)
+
+@app.route("/tags/new", methods=["POST"])
+def tags_new():
+    """Handle new tag submission form"""
+
+    post_ids = [int(num) for num in request.form.getlist("posts")]
+    posts = Post.query.filter(Post.id.in_(post_ids)).all()
+    new_tag = Tag(name=request.form['name'], posts=posts)
+
+    db.session.add(new_tag)
+    db.session.commit()
+
+    return redirect("/tags")
+
+@app.route('/tags/<int:tag_id>')
+def tags_show(tag_id):
+    """Show a page with specific tag info"""
+
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template('tag_show.html', tag=tag)
+
+@app.route('/tags/<int:tag_id>/edit')
+def tags_edit_form(tag_id):
+    """Show a form to edit an existing tag"""
+
+    tag = Tag.query.get_or_404(tag_id)
+    posts = Post.query.all()
+    return render_template('tag_edit.html', tag=tag, posts=posts)
+
+@app.route('/tags/<int:tag_id>/edit', methods=["POST"])
+def tags_edit(tag_id):
+    """Handle form to edit an existing tag"""
+
+    tag = Tag.query.get_or_404(tag_id)
+    tag.name = request.form['name']
+    post_ids = [int(num) for num in request.form.getlist("posts")]
+    tag.posts = Post.query.filter(Post.id.in_(post_ids)).all()
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect("/tags")
+
+@app.route('/tags/<int:tag_id>/delete', methods=["POST"])
+def tags_delete(tag_id):
+    """Handle form to delete an existing tag"""
+
+    tag = Tag.query.get_or_404(tag_id)
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect("/tags")
